@@ -2,54 +2,74 @@
 
 public interface IRepository<T> where T : class
 {
-    Task<T> GetById(int id);
-    Task<List<T>> GetAll();
-    Task Add(T entity);
-    Task Update(T entity);
-    Task Delete(T entity);
+    T GetById(int id);
+    List<T> GetAll();
+    void Add(T entity);
+    void Update(T entity);
+    void Delete(T entity);
 }
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    private readonly ApplicationDbContext _context;
+    public ApplicationDbContext context;
 
     public Repository(ApplicationDbContext context)
     {
-        _context = context;
+        this.context = context;
     }
 
-    public async Task<T> GetById(int id)
+    public T GetById(int id)
     {
-        return await _context.Set<T>().FindAsync(id);
+        return context.Set<T>().Find(id);
     }
 
-    public async Task<List<T>> GetAll()
+    public List<T> GetAll()
     {
-        return await _context.Set<T>().ToListAsync();
+        return context.Set<T>().ToList();
     }
 
-    public async Task Add(T entity)
+    public void Add(T entity)
     {
-        await _context.Set<T>().AddAsync(entity);
-        await _context.SaveChangesAsync();
+        context.Set<T>().Add(entity);
+        context.SaveChanges();
     }
 
-    public async Task Update(T entity)
+    public void Update(T entity)
     {
-        _context.Set<T>().Update(entity);
-        await _context.SaveChangesAsync();
+        context.Set<T>().Update(entity);
+        context.SaveChanges();
     }
 
-    public async Task Delete(T entity)
+    public void Delete(T entity)
     {
-        _context.Set<T>().Remove(entity);
-        await _context.SaveChangesAsync();
+        context.Set<T>().Remove(entity);
+        context.SaveChanges();
     }
 }
 
-public interface IProfessorRepository : IRepository<Professor>
+public interface IProfessorRepository
 {
-    // Métodos específicos para o Professor, se necessário
+}
+
+public class ProfessorRepository : Repository<Professor>, IProfessorRepository
+{
+    
+    public ProfessorRepository(ApplicationDbContext context) : base(context)
+    {
+    }
+
+    public bool login(string nome, string pass)
+    {
+        var professor = context.Professors.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
+        if (professor != null)
+        {
+            if (professor.Senha == pass)
+            {
+                return false;
+            }
+        }
+        return false;
+    }
 }
 
 public interface IAlunoRepository : IRepository<Aluno>
@@ -75,13 +95,6 @@ public interface IQuestaoRepository : IRepository<Questao>
 public interface IAlternativaRepository : IRepository<Alternativa>
 {
     // Métodos específicos para a Alternativa, se necessário
-}
-
-public class ProfessorRepository : Repository<Professor>, IProfessorRepository
-{
-    public ProfessorRepository(ApplicationDbContext context) : base(context)
-    {
-    }
 }
 
 public class AlunoRepository : Repository<Aluno>, IAlunoRepository

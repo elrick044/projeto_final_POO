@@ -20,17 +20,4 @@
       <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="reflection\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="reflection\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="reflection\**" />
-    </ItemGroup>
-
 </Project>
