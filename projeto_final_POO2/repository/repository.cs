@@ -49,6 +49,7 @@ public class Repository<T> : IRepository<T> where T : class
 
 public interface IProfessorRepository
 {
+    
 }
 
 public class ProfessorRepository : Repository<Professor>, IProfessorRepository
