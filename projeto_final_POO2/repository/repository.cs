@@ -11,39 +11,34 @@ public interface IRepository<T> where T : class
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    public ApplicationDbContext context;
-
-    public Repository(ApplicationDbContext context)
-    {
-        this.context = context;
-    }
-
+    public ApplicationDbContext Context = new ApplicationDbContext();
+    
     public T GetById(int id)
     {
-        return context.Set<T>().Find(id);
+        return Context.Set<T>().Find(id);
     }
 
     public List<T> GetAll()
     {
-        return context.Set<T>().ToList();
+        return Context.Set<T>().ToList();
     }
 
     public void Add(T entity)
     {
-        context.Set<T>().Add(entity);
-        context.SaveChanges();
+        Context.Set<T>().Add(entity);
+        Context.SaveChanges();
     }
 
     public void Update(T entity)
     {
-        context.Set<T>().Update(entity);
-        context.SaveChanges();
+        Context.Set<T>().Update(entity);
+        Context.SaveChanges();
     }
 
     public void Delete(T entity)
     {
-        context.Set<T>().Remove(entity);
-        context.SaveChanges();
+        Context.Set<T>().Remove(entity);
+        Context.SaveChanges();
     }
 }
 
@@ -55,21 +50,17 @@ public interface IProfessorRepository
 public class ProfessorRepository : Repository<Professor>, IProfessorRepository
 {
     
-    public ProfessorRepository(ApplicationDbContext context) : base(context)
+    public Professor login(string nome, string pass)
     {
-    }
-
-    public bool login(string nome, string pass)
-    {
-        var professor = context.Professors.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
+        var professor = Context.Professor.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
         if (professor != null)
         {
             if (professor.Senha == pass)
             {
-                return false;
+                return null;
             }
         }
-        return false;
+        return professor;
     }
 }
 
@@ -100,35 +91,34 @@ public interface IAlternativaRepository : IRepository<Alternativa>
 
 public class AlunoRepository : Repository<Aluno>, IAlunoRepository
 {
-    public AlunoRepository(ApplicationDbContext context) : base(context)
+    public ApplicationDbContext Context = new ApplicationDbContext();
+    
+    public Aluno login(string nome, string pass)
     {
+        var aluno = Context.Aluno.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
+        if (aluno != null)
+        {
+            if (aluno.Senha == pass)
+            {
+                return null;
+            }
+        }
+        return aluno;
     }
 }
 
 public class MateriaRepository : Repository<Materia>, IMateriaRepository
 {
-    public MateriaRepository(ApplicationDbContext context) : base(context)
-    {
-    }
 }
 
 public class ProvaRepository : Repository<Prova>, IProvaRepository
 {
-    public ProvaRepository(ApplicationDbContext context) : base(context)
-    {
-    }
 }
 
 public class QuestaoRepository : Repository<Questao>, IQuestaoRepository
 {
-    public QuestaoRepository(ApplicationDbContext context) : base(context)
-    {
-    }
 }
 
 public class AlternativaRepository : Repository<Alternativa>, IAlternativaRepository
 {
-    public AlternativaRepository(ApplicationDbContext context) : base(context)
-    {
-    }
 }

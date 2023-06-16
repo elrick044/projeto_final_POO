@@ -3,12 +3,11 @@
 
 public class Professor
 {
-    public override string ToString()
+    public Professor()
     {
-        return base.ToString();
     }
 
-    public Professor(int id, string nome, string login, string senha)
+    public Professor(int? id, string nome, string login, string senha)
     {
         Id = id;
         Nome = nome;
@@ -17,21 +16,39 @@ public class Professor
     }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-    public string Nome { get; set; }
-    public string Login { get; set; }
-    public string Senha { get; set; }
-}
-
-public class Aluno
-{
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public string Nome { get; set; }
     public string Login { get; set; }
     public string Senha { get; set; }
     
-    public List<Materia> Materias { get; set; }
+    public override string ToString()
+    {
+        return base.ToString();
+    }
+}
+
+public class Aluno
+{
+    public Aluno()
+    {
+    }
+
+    public Aluno(int? id, string nome, string login, string senha, List<Materia>? materias)
+    {
+        Id = id;
+        Nome = nome;
+        Login = login;
+        Senha = senha;
+        Materias = materias;
+    }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int? Id { get; set; }
+    public string Nome { get; set; }
+    public string Login { get; set; }
+    public string Senha { get; set; }
+    
+    public List<Materia>? Materias { get; set; }
 }
 
 public class Materia
@@ -73,12 +90,12 @@ public class Alternativa
 
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<Professor> Professors { get; set; }
-    public DbSet<Professor> Alunos { get; set; }
-    public DbSet<Materia> Materias { get; set; }
-    public DbSet<Prova> Provas { get; set; }
-    public DbSet<Questao> Questoes { get; set; }
-    public DbSet<Alternativa> Alternativas { get; set; }
+    public DbSet<Professor> Professor{ get; set; }
+    public DbSet<Aluno> Aluno { get; set; }
+    public DbSet<Materia> Materia { get; set; }
+    public DbSet<Prova> Prova { get; set; }
+    public DbSet<Questao> Questoe { get; set; }
+    public DbSet<Alternativa> Alternativa { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

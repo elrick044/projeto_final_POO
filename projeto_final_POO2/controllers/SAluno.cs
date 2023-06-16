@@ -1,12 +1,12 @@
 ﻿namespace projeto_final_POO2.controllers;
 
-public class SProfessor
+public class SAluno
 {
-    
-    private readonly ProfessorRepository _rp = new ProfessorRepository();
+
+    private readonly AlunoRepository _ra = new AlunoRepository();
 
     public void Add(){
-        Console.WriteLine("--== DIGITE OS DADOS DO PROFESSOR: ==--");
+        Console.WriteLine("--== DIGITE OS DADOS DO ALUNO: ==--");
         Console.WriteLine("Nome:");
         string nome = Console.ReadLine();
 
@@ -16,12 +16,12 @@ public class SProfessor
         Console.WriteLine("Senha: ");
         string senha = Console.ReadLine();
       
-        Professor professor = new Professor(null, nome, login, senha);
+        Aluno aluno = new Aluno(null, nome, login, senha, null);
 
-        _rp.Add(professor);
+        _ra.Add(aluno);
     }
 
-    public Professor Login(){
+    public Aluno Login(){
         Console.WriteLine("--== LOGIN ==--");
         Console.WriteLine("Login: ");
         string login = Console.ReadLine();
@@ -29,7 +29,9 @@ public class SProfessor
         Console.WriteLine("Senha: ");
         string senha = Console.ReadLine();
 
-        Professor professor = _rp.login(login, senha);
-        return professor;
+        Aluno aluno = _ra.login(login, senha);
+
+        return aluno;
     }
+    
 }
