@@ -50,17 +50,22 @@ public interface IProfessorRepository
 public class ProfessorRepository : Repository<Professor>, IProfessorRepository
 {
     
-    public Professor login(string nome, string pass)
+    public Professor login(string login, string pass)
     {
-        var professor = Context.Professor.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
-        if (professor != null)
+        Professor professor = new Professor(); 
+        professor = Context.Professor.First(u => u.Login == login);//testar o que acontece quando não existe o nome  
+        
+        
+        if (professor.Id != null)
         {
-            if (professor.Senha == pass)
+            if (professor.Senha != pass)
             {
                 return null;
             }
+            return professor;
         }
-        return professor;
+
+        return null;
     }
 }
 
@@ -98,12 +103,14 @@ public class AlunoRepository : Repository<Aluno>, IAlunoRepository
         var aluno = Context.Aluno.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
         if (aluno != null)
         {
-            if (aluno.Senha == pass)
+            if (aluno.Senha != pass)
             {
                 return null;
             }
+
+            return aluno;
         }
-        return aluno;
+        return null;
     }
 }
 
@@ -111,14 +118,34 @@ public class MateriaRepository : Repository<Materia>, IMateriaRepository
 {
 }
 
+
 public class ProvaRepository : Repository<Prova>, IProvaRepository
 {
+    public ApplicationDbContext Context = new ApplicationDbContext();
+
+    public List<Prova> GetByMateria(Materia materia)
+    {
+        return new List<Prova> { Context.Set<Prova>().Find(materia) };
+    }
 }
+
 
 public class QuestaoRepository : Repository<Questao>, IQuestaoRepository
 {
+    public ApplicationDbContext Context = new ApplicationDbContext();
+
+    public List<Questao> GetByProva(Prova prova)
+    {
+        return new List<Questao> { Context.Set<Questao>().Find(prova) };
+    }
 }
 
 public class AlternativaRepository : Repository<Alternativa>, IAlternativaRepository
 {
+    public ApplicationDbContext Context = new ApplicationDbContext();
+
+    public List<Alternativa> GetByQuestao(Questao questao)
+    {
+        return new List<Alternativa> { Context.Set<Alternativa>().Find(questao) };
+    }
 }
