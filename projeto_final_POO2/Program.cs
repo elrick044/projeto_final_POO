@@ -1,4 +1,5 @@
-﻿using System.Data.SqlTypes;
+﻿using System;
+using System.Data.SqlTypes;
 using Newtonsoft.Json;
 using projeto_final_POO2.controllers;
 
@@ -237,91 +238,272 @@ public class AplicativoProvas
 
     public static int MenuPessoa()
     {
-        Console.WriteLine("--== ESCOLHA SUA OPÇÃO ==--");
-        Console.WriteLine("1 - PROFESSOR");
-        Console.WriteLine("2 - ALUNO");
-        Console.WriteLine("0 - SAIR");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("--== ESCOLHA SUA OPÇÃO ==--");
+            Console.WriteLine("1 - PROFESSOR");
+            Console.WriteLine("2 - ALUNO");
+            Console.WriteLine("0 - SAIR");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 2)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
 
     public static int MenuSign()
     {
-        Console.WriteLine("--== ESCOLHA SUA OPÇÃO: ==--");
-        Console.WriteLine("1 - CADASTRO");
-        Console.WriteLine("2 - LOGIN");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("--== ESCOLHA SUA OPÇÃO: ==--");
+            Console.WriteLine("1 - CADASTRO");
+            Console.WriteLine("2 - LOGIN");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 1 && opcao <= 2)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
 
     public static int MenuProfessor()
     {
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("1 - Materia");
-        Console.WriteLine("2 - Prova");
-        Console.WriteLine("3 - Questao");
-        Console.WriteLine("4 - Alternativas");
-        Console.WriteLine("0 - Logout");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("-=: Digite a opção desejada :=-");
+            Console.WriteLine("1 - Materia");
+            Console.WriteLine("2 - Prova");
+            Console.WriteLine("3 - Questao");
+            Console.WriteLine("4 - Alternativas");
+            Console.WriteLine("0 - Logout");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 4)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
     
     public static int MenuAluno()
     {
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("1 - Entrar em Materia");
-        Console.WriteLine("2 - Ver Materias");
-        Console.WriteLine("3 - Ver Provas");
-        Console.WriteLine("4 - Fazer Prova");
-        Console.WriteLine("0 - Logout");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("-=: Digite a opção desejada :=-");
+            Console.WriteLine("1 - Entrar em Materia");
+            Console.WriteLine("2 - Ver Materias");
+            Console.WriteLine("3 - Ver Provas");
+            Console.WriteLine("4 - Fazer Prova");
+            Console.WriteLine("0 - Logout");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 4)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
 
     public static int MenuMateria()
     {
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("1 - Adicionar");
-        Console.WriteLine("2 - Atualizar");
-        Console.WriteLine("3 - Excluir");
-        Console.WriteLine("4 - Obter Por ID");
-        Console.WriteLine("5 - Obter Todos");
-        Console.WriteLine("0 - Sair");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("-=: Digite a opção desejada :=-");
+            Console.WriteLine("1 - Adicionar");
+            Console.WriteLine("2 - Atualizar");
+            Console.WriteLine("3 - Excluir");
+            Console.WriteLine("4 - Obter Por ID");
+            Console.WriteLine("5 - Obter Todos");
+            Console.WriteLine("0 - Sair");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 5)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
     
     public static int MenuProva()
     {
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("1 - Adicionar");
-        Console.WriteLine("2 - Atualizar");
-        Console.WriteLine("3 - Excluir");
-        Console.WriteLine("4 - Obter Por ID");
-        Console.WriteLine("5 - Obter Todos");
-        Console.WriteLine("0 - Sair");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("-=: Digite a opção desejada :=-");
+            Console.WriteLine("1 - Adicionar");
+            Console.WriteLine("2 - Atualizar");
+            Console.WriteLine("3 - Excluir");
+            Console.WriteLine("4 - Obter Por ID");
+            Console.WriteLine("5 - Obter Todos");
+            Console.WriteLine("0 - Sair");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 5)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
+
     public static int MenuQuestao()
     {
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("1 - Adicionar");
-        Console.WriteLine("2 - Atualizar");
-        Console.WriteLine("3 - Excluir");
-        Console.WriteLine("4 - Obter Por ID");
-        Console.WriteLine("5 - Obter Todos");
-        Console.WriteLine("0 - Sair");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("-=: Digite a opção desejada :=-");
+            Console.WriteLine("1 - Adicionar");
+            Console.WriteLine("2 - Atualizar");
+            Console.WriteLine("3 - Excluir");
+            Console.WriteLine("4 - Obter Por ID");
+            Console.WriteLine("5 - Obter Todos");
+            Console.WriteLine("0 - Sair");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 5)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
-    
+
     public static int MenuAlternativa()
     {
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("1 - Adicionar");
-        Console.WriteLine("2 - Atualizar");
-        Console.WriteLine("3 - Excluir");
-        Console.WriteLine("4 - Obter Por ID");
-        Console.WriteLine("5 - Obter Todos");
-        Console.WriteLine("0 - Sair");
-        return Convert.ToInt32(Console.ReadLine());
+        int opcao = 0;
+        bool entradaValida = false;
+
+        while (!entradaValida)
+        {
+            Console.WriteLine("-=: Digite a opção desejada :=-");
+            Console.WriteLine("1 - Adicionar");
+            Console.WriteLine("2 - Atualizar");
+            Console.WriteLine("3 - Excluir");
+            Console.WriteLine("4 - Obter Por ID");
+            Console.WriteLine("5 - Obter Todos");
+            Console.WriteLine("0 - Sair");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                if (opcao >= 0 && opcao <= 5)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Digite um número válido.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida! Digite um número válido.");
+            }
+        }
+
+        return opcao;
     }
-
-
-    
-    
 }

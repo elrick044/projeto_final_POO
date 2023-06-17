@@ -1,6 +1,8 @@
-﻿ using System.ComponentModel.DataAnnotations;
- using System.ComponentModel.DataAnnotations.Schema;
- using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 public class Professor
 {
@@ -23,9 +25,10 @@ public class Professor
     public string Senha { get; set; }
     
     public List<Materia> Materias { get; set; }
+    
     public override string ToString()
     {
-        return base.ToString();
+        return $"Professor: Id={Id}, Nome={Nome}, Login={Login}, Senha={Senha}";
     }
 }
 
@@ -41,8 +44,10 @@ public class Aluno
         Nome = nome;
         Login = login;
         Senha = senha;
-        Materias = materias;
-    }
+        //Materias = materias;
+        
+        Materias = new List<Materia>();
+        }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
@@ -51,6 +56,11 @@ public class Aluno
     public string Senha { get; set; }
     
     public List<Materia>? Materias { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Aluno: Id={Id}, Nome={Nome}, Login={Login}, Senha={Senha}";
+    }
 }
 
 public class Materia
@@ -59,13 +69,19 @@ public class Materia
     {
     }
 
-    public Materia(int? id, string nome, int professorId, List<Aluno> alunos, string chave)
+    public Materia(int? id, string nome, int professorId, List<Aluno>? alunos, string chave)
     {
         Id = id;
         Nome = nome;
         ProfessorId = professorId;
         Alunos = alunos;
         Chave = chave;
+
+        if (alunos == null)
+        {
+            Alunos = new List<Aluno>();    
+        }
+        
     }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -79,6 +95,11 @@ public class Materia
     public Professor Professor { get; set; }
     
     public List<Prova> Provas { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Materia: Id={Id}, Nome={Nome}, ProfessorId={ProfessorId}, Chave={Chave}";
+    }
 }
 
 public class Prova
@@ -107,6 +128,11 @@ public class Prova
     public Materia Materia { get; set; }
     
     public List<Questao> Questoes { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Prova: Id={Id}, Prazo={Prazo}, Peso={Peso}, NomeProva={NomeProva}, MateriaId={MateriaId}";
+    }
 }
 
 public class Questao
@@ -125,12 +151,16 @@ public class Questao
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
     public string Titulo { get; set; }
-    //public float Peso { get; set; }
     private int ProvaId { get; set; }
     [ForeignKey("ProvaId")]
     public Prova Prova { get; set; }
     
     public List<Alternativa> Alternativas { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Questao: Id={Id}, Titulo={Titulo}, ProvaId={ProvaId}";
+    }
 }
 
 public class Alternativa
@@ -156,6 +186,11 @@ public class Alternativa
     [ForeignKey("QuestaoId")]
     
     public Questao Questao { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Alternativa: Id={Id}, Texto={Texto}, Correta={Correta}, QuestaoId={QuestaoId}";
+    }
 }
 
 public class ApplicationDbContext : DbContext

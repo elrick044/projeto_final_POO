@@ -4,14 +4,19 @@ public class SQuestao
 {
     private readonly QuestaoRepository _rq = new QuestaoRepository();
     private readonly ProvaRepository _rp = new ProvaRepository();
-    
-    public void Add(){
+
+    public void Add()
+    {
         Console.WriteLine("--== DIGITE OS DADOS DA QUESTAO: ==--");
         Console.WriteLine("Título:");
         string titulo = Console.ReadLine();
-        
+
         Console.WriteLine("Id da Prova: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Prova: ");
+        }
 
         Prova prova = _rp.GetById(id);
 
@@ -23,36 +28,52 @@ public class SQuestao
     public void Update()
     {
         Console.WriteLine("DIGITE O ID DA QUESTAO A SER ALTERADA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Questao: ");
+        }
+
         Console.WriteLine("--== DIGITE OS NOVOS DADOS DA QUESTAO: ==--");
         Console.WriteLine("Título:");
         string titulo = Console.ReadLine();
-        
+
         Console.WriteLine("Id da Prova: ");
-        int idp = Convert.ToInt32(Console.ReadLine());
+        int idp;
+        while (!int.TryParse(Console.ReadLine(), out idp))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Prova: ");
+        }
 
         Prova prova = _rp.GetById(idp);
 
         Questao questao = new Questao(id, titulo, Convert.ToInt32(prova.Id));
-        
+
         _rq.Update(questao);
     }
 
     public void Delete()
     {
-        Console.WriteLine("DIGITE O ID DA PROVA A SER DELETADA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine("DIGITE O ID DA QUESTAO A SER DELETADA: ");
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Questao: ");
+        }
 
-        Prova prova = _rp.GetById(id);
+        Questao questao = _rq.GetById(id);
 
-        _rp.Delete(prova);
+        _rq.Delete(questao);
     }
 
     public void GetByID()
     {
         Console.WriteLine("DIGITE O ID DA QUESTAO A SER IMPRESSA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Questao: ");
+        }
 
         Questao questao = _rq.GetById(id);
 

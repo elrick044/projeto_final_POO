@@ -98,9 +98,9 @@ public class AlunoRepository : Repository<Aluno>, IAlunoRepository
 {
     public ApplicationDbContext Context = new ApplicationDbContext();
     
-    public Aluno login(string nome, string pass)
+    public Aluno login(string login, string pass)
     {
-        var aluno = Context.Aluno.First(u => u.Nome == nome);//testar o que acontece quando não existe o nome  
+        var aluno = Context.Aluno.First(u => u.Login == login);//testar o que acontece quando não existe o nome  
         if (aluno != null)
         {
             if (aluno.Senha != pass)
@@ -111,6 +111,19 @@ public class AlunoRepository : Repository<Aluno>, IAlunoRepository
             return aluno;
         }
         return null;
+    }
+
+    public void subscribeClass(Materia materia, Aluno aluno)
+    {
+        if (GetById(Convert.ToInt32(aluno.Id)).Materias == null)
+        {
+            GetById(Convert.ToInt32(aluno.Id)).Materias = new List<Materia> { materia };
+        }
+        else
+        {
+            GetById(Convert.ToInt32(aluno.Id)).Materias.Add(materia);
+        }
+        Context.SaveChanges();
     }
 }
 

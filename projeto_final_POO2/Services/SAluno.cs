@@ -13,7 +13,8 @@ public class SAluno
     private static readonly SMateria Sm = new SMateria();
     private static readonly SProva Sp = new SProva();
 
-    public void Add(){
+    public void Add()
+    {
         Console.WriteLine("--== DIGITE OS DADOS DO ALUNO: ==--");
         Console.WriteLine("Nome:");
         string nome = Console.ReadLine();
@@ -23,13 +24,14 @@ public class SAluno
 
         Console.WriteLine("Senha: ");
         string senha = Console.ReadLine();
-      
+
         Aluno aluno = new Aluno(null, nome, login, senha, null);
 
         _ra.Add(aluno);
     }
 
-    public Aluno Login(){
+    public Aluno Login()
+    {
         Console.WriteLine("--== LOGIN ==--");
         Console.WriteLine("Login: ");
         string login = Console.ReadLine();
@@ -46,14 +48,18 @@ public class SAluno
     {
         Console.WriteLine("--== MATERIAS ==--");
         Sm.GetAll();
-        
+
         Console.WriteLine("Id da Materia: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o Id da Materia: ");
+        }
 
         Materia materia = Rm.GetById(id);
 
         string chave = null;
-        
+
         while (chave != materia.Chave)
         {
             Console.WriteLine("Chave (Se não souber a chave digite NAO para voltar para o menu): ");
@@ -66,8 +72,15 @@ public class SAluno
 
             if (chave == materia.Chave)
             {
-              materia.Alunos.Add(aluno);
-              aluno.Materias.Add(materia);
+                aluno.Materias = new List<Materia> { materia };
+
+                _ra.subscribeClass(materia, aluno);
+                //materia.Alunos.Add(aluno);
+                //aluno.Materias.Add(materia);
+            }
+            else
+            {
+                Console.WriteLine("Chave inválida");
             }
         }
     }
@@ -75,13 +88,20 @@ public class SAluno
     public void GetMateriasAluno(Aluno aluno)
     {
         Console.WriteLine("--== MATERIAS ==--");
-        
-        foreach (var materia in aluno.Materias)
+
+        if (aluno.Materias == null)
         {
-            Console.WriteLine(materia.ToString());
+            Console.WriteLine("Você ainda não está em nenhuma matéria");
+        }
+        else
+        {
+            foreach (var materia in aluno.Materias)
+            {
+                Console.WriteLine(materia.ToString());
+            }
         }
     }
-    
+
     public void GetProvasAluno(Aluno aluno)
     {
         foreach (var materia in aluno.Materias)
@@ -96,9 +116,13 @@ public class SAluno
 
         Console.WriteLine("--== PROVAS ==--");
         GetProvasAluno(aluno);
-        
+
         Console.WriteLine("Id da Prova: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o Id da Prova: ");
+        }
 
         Prova prova = Rp.GetById(id);
 
@@ -110,7 +134,7 @@ public class SAluno
             Console.WriteLine(questao.Titulo);
 
             Alternativa correta = null;
-            
+
             foreach (var alternativa in alternativas)
             {
                 Console.WriteLine(alternativa.Id + " - " + alternativa.Texto);
@@ -119,17 +143,21 @@ public class SAluno
                     correta = alternativa;
                 }
             }
-            
+
             Console.WriteLine("Resposta: ");
-            if (correta.Id == Convert.ToInt32(Console.ReadLine()))
+            int resposta;
+            while (!int.TryParse(Console.ReadLine(), out resposta))
+            {
+                Console.WriteLine("Entrada inválida. Digite um número válido para a Resposta: ");
+            }
+
+            if (correta.Id == resposta)
             {
                 acertos++;
             }
         }
-        
+
         Console.WriteLine(acertos + " / " + questoes.Count);
         Console.WriteLine("Nota: " + Convert.ToDouble(acertos) * 100 / questoes.Count);
     }
-    
-    
 }

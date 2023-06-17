@@ -4,16 +4,17 @@ public class SMateria
 {
     private readonly MateriaRepository _rm = new MateriaRepository();
     private readonly ProfessorRepository _rp = new ProfessorRepository();
-    
-    public void Add(Professor p){
+
+    public void Add(Professor p)
+    {
         Console.WriteLine("--== DIGITE OS DADOS DO MATERIA: ==--");
         Console.WriteLine("Nome:");
         string nome = Console.ReadLine();
 
         Console.WriteLine("Chave: ");
         string chave = Console.ReadLine();
-        
-        Materia materia = new Materia(null, nome, Convert.ToInt32(p.Id),null,  chave);
+
+        Materia materia = new Materia(null, nome, Convert.ToInt32(p.Id), null, chave);
 
         _rm.Add(materia);
     }
@@ -21,8 +22,12 @@ public class SMateria
     public void Update(Professor p)
     {
         Console.WriteLine("DIGITE O ID DA MATERIA A SER ALTERADA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
+        }
+
         Materia m = _rm.GetById(id);
 
         Console.WriteLine("--== DIGITE OS NOVOS DADOS DO MATERIA: ==--");
@@ -31,16 +36,20 @@ public class SMateria
 
         Console.WriteLine("Chave: ");
         string chave = Console.ReadLine();
-        
+
         Materia materia = new Materia(id, nome, Convert.ToInt32(p.Id), m.Alunos, chave);
-        
+
         _rm.Update(materia);
     }
 
     public void Delete()
     {
         Console.WriteLine("DIGITE O ID DA MATERIA A SER DELETADA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
+        }
 
         Materia materia = _rm.GetById(id);
 
@@ -50,7 +59,11 @@ public class SMateria
     public void GetByID()
     {
         Console.WriteLine("DIGITE O ID DA MATERIA A SER IMPRESSA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
+        }
 
         Materia materia = _rm.GetById(id);
 
@@ -66,5 +79,4 @@ public class SMateria
             Console.WriteLine(materia.ToString());
         }
     }
-
 }

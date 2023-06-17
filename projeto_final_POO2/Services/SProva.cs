@@ -6,20 +6,33 @@ public class SProva
 {
     private readonly ProvaRepository _rp = new ProvaRepository();
     private readonly MateriaRepository _rm = new MateriaRepository();
-    
-    public void Add(){
+
+    public void Add()
+    {
         Console.WriteLine("--== DIGITE OS DADOS DA PROVA: ==--");
         Console.WriteLine("Nome:");
         string nome = Console.ReadLine();
 
         Console.WriteLine("Peso: ");
-        float peso = Convert.ToSingle(Console.ReadLine());
+        float peso;
+        while (!float.TryParse(Console.ReadLine(), out peso))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o peso: ");
+        }
 
         Console.WriteLine("Prazo:");
-        DateTime prazo = Convert.ToDateTime(Console.ReadLine());
-        
+        DateTime prazo;
+        while (!DateTime.TryParse(Console.ReadLine(), out prazo))
+        {
+            Console.WriteLine("Entrada inválida. Digite uma data válida para o prazo: ");
+        }
+
         Console.WriteLine("Id da Materia: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
+        }
 
         Materia materia = _rm.GetById(id);
 
@@ -30,33 +43,53 @@ public class SProva
 
     public void Update()
     {
-        Console.WriteLine("DIGITE O ID DA MATERIA A SER ALTERADA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-        
+        Console.WriteLine("DIGITE O ID DA PROVA A SER ALTERADA: ");
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Prova: ");
+        }
+
         Console.WriteLine("--== DIGITE OS NOVOS DADOS DA PROVA: ==--");
         Console.WriteLine("Nome:");
         string nome = Console.ReadLine();
 
         Console.WriteLine("Peso: ");
-        float peso = Convert.ToSingle(Console.ReadLine());
+        float peso;
+        while (!float.TryParse(Console.ReadLine(), out peso))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o peso: ");
+        }
 
         Console.WriteLine("Prazo:");
-        DateTime prazo = Convert.ToDateTime(Console.ReadLine());
-        
+        DateTime prazo;
+        while (!DateTime.TryParse(Console.ReadLine(), out prazo))
+        {
+            Console.WriteLine("Entrada inválida. Digite uma data válida para o prazo: ");
+        }
+
         Console.WriteLine("Id da Materia: ");
-        int idm = Convert.ToInt32(Console.ReadLine());
+        int idm;
+        while (!int.TryParse(Console.ReadLine(), out idm))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
+        }
 
         Materia materia = _rm.GetById(idm);
 
         Prova prova = new Prova(id, prazo, peso, nome, Convert.ToInt32(materia.Id));
-        
+
         _rp.Update(prova);
     }
 
     public void Delete()
     {
         Console.WriteLine("DIGITE O ID DA PROVA A SER DELETADA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Prova: ");
+        }
 
         Prova prova = _rp.GetById(id);
 
@@ -65,14 +98,18 @@ public class SProva
 
     public void GetByID()
     {
-        Console.WriteLine("DIGITE O ID DA MATERIA A SER IMPRESSA: ");
-        int id = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine("DIGITE O ID DA PROVA A SER IMPRESSA: ");
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id))
+        {
+            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Prova: ");
+        }
 
         Prova prova = _rp.GetById(id);
 
         Console.WriteLine(prova.ToString());
     }
-    
+
     public void GetByMaterias(Materia materia)
     {
         List<Prova> provas = _rp.GetByMateria(materia);
@@ -80,7 +117,6 @@ public class SProva
         foreach (var prova in provas)
         {
             Console.WriteLine(prova.ToString());
-
         }
     }
 
@@ -93,5 +129,4 @@ public class SProva
             Console.WriteLine(prova.ToString());
         }
     }
-
 }
