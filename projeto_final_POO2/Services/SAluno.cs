@@ -100,13 +100,13 @@ public class SAluno
         return materias;
     }
 
-    public void GetProvasAluno(Aluno aluno)
+    public void GetProvasAluno(Aluno aluno, bool dentroDoPrazo)
     {
         List < Materia > materias = GetMateriasAluno(aluno);
         
         foreach (var materia in materias)
         {
-            ServiceSProva.GetByMaterias(materia);
+            ServiceSProva.GetByMaterias(materia, dentroDoPrazo);
         }
     }
 
@@ -115,7 +115,7 @@ public class SAluno
         int acertos = 0;
 
         Console.WriteLine("--== PROVAS ==--");
-        GetProvasAluno(aluno);
+        GetProvasAluno(aluno, true);
 
         Console.WriteLine("Id da Prova: ");
         int id;
@@ -157,8 +157,14 @@ public class SAluno
             }
         }
 
+        double nota = Convert.ToDouble(acertos) * 100 / questoes.Count;
+
+        AlunoMateria alunoMateria = _alunoMateriaRepository.GetByIds(Convert.ToInt32(aluno.Id), prova.MateriaId);
+        alunoMateria.Nota = nota * prova.Peso;
+        _alunoMateriaRepository.Update(alunoMateria);
+        
         Console.WriteLine(acertos + " / " + questoes.Count);
-        Console.WriteLine("Nota: " + Convert.ToDouble(acertos) * 100 / questoes.Count);
+        Console.WriteLine("Nota: " + nota);
     }
 
     public void imprimirMaterias(Aluno aluno)

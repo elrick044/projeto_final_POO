@@ -30,7 +30,7 @@ public class SMateria
 
         Materia materia = new Materia(m.Id, nome, m.ProfessorId, m.AlunosMaterias, chave);
 
-        _rm.Update(materia);
+        _rm.Update(Convert.ToInt32(materia.Id), materia);
     }
 
     public void Delete(Materia materia)

@@ -24,7 +24,7 @@ public class SQuestao
         
         Questao questao = new Questao(q.Id, titulo, Convert.ToInt32(p.Id));
 
-        _rq.Update(questao);
+        _rq.Update(Convert.ToInt32(questao.Id), questao);
     }
 
     public void Delete(Questao questao)

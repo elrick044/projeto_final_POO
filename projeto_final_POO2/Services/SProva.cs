@@ -61,7 +61,7 @@ public class SProva
 
         Prova prova = new Prova(p.Id, prazo, peso, nome, p.MateriaId);
 
-        _rp.Update(prova);
+        _rp.Update(Convert.ToInt32(prova.Id), prova);
     }
 
     public void Delete(Prova prova)
@@ -78,13 +78,23 @@ public class SProva
         return prova;
     }
 
-    public void GetByMaterias(Materia materia)
+    public void GetByMaterias(Materia materia, bool dentroDoPrazo)
     {
         List<Prova> provas = _rp.GetByMateria(materia);
 
         foreach (var prova in provas)
         {
-            Console.WriteLine(prova.ToString());
+            if (dentroDoPrazo)
+            {
+                if (prova.Prazo > DateTime.Now)
+                {
+                    Console.WriteLine(prova.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine(prova.ToString());
+            }
         }
     }
 

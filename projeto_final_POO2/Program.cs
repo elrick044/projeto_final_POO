@@ -2,6 +2,7 @@
 using System.Data.SqlTypes;
 using Newtonsoft.Json;
 using projeto_final_POO2.controllers;
+using projeto_final_POO2.menu;
 
 public class AplicativoProvas
 {
@@ -29,10 +30,10 @@ public class AplicativoProvas
         {
             if (!loged)
             {
-                switch (MenuPessoa())
+                switch (Menu.MenuPessoa())
                 {
                     case 1:
-                        switch (MenuSign())
+                        switch (Menu.MenuSign())
                         {
                             case 1:
                                 serviceProfessor.Add();
@@ -53,7 +54,7 @@ public class AplicativoProvas
 
                         break;
                     case 2:
-                        switch (MenuSign())
+                        switch (Menu.MenuSign())
                         {
                             case 1:
                                 serviceAluno.Add();
@@ -84,7 +85,7 @@ public class AplicativoProvas
                 {
                     while (loged)
                     {
-                        char op = MenuProfessor();
+                        char op = Menu.MenuProfessor();
 
                         if (op == '+')
                         {
@@ -94,7 +95,7 @@ public class AplicativoProvas
                         {
                             Materia materia = serviceMateria.GetByID((int)Char.GetNumericValue(op));
 
-                            op = MenuMateria();
+                            op = Menu.MenuMateria();
 
                             if (op == '+')
                             {
@@ -114,7 +115,7 @@ public class AplicativoProvas
 
                                 while (true)
                                 {
-                                    op = MenuProva();
+                                    op = Menu.MenuProva();
 
                                     if (op == '+')
                                     {
@@ -134,7 +135,7 @@ public class AplicativoProvas
 
                                         while (true)
                                         {
-                                            op = MenuQuestao();
+                                            op = Menu.MenuQuestao();
 
                                             if (op == '+')
                                             {
@@ -154,7 +155,7 @@ public class AplicativoProvas
 
                                                 while (true)
                                                 {
-                                                    op = MenuAlternativa();
+                                                    op = Menu.MenuAlternativa();
 
                                                     if (op == '-')
                                                     {
@@ -201,7 +202,7 @@ public class AplicativoProvas
                     {
                         int brk = 0;
 
-                        switch (MenuAluno())
+                        switch (Menu.MenuAluno())
                         {
                             case 1:
                                 serviceAluno.Register(aluno);
@@ -210,7 +211,7 @@ public class AplicativoProvas
                                 serviceAluno.imprimirMaterias(aluno);
                                 break;
                             case 3:
-                                serviceAluno.GetProvasAluno(aluno);
+                                serviceAluno.GetProvasAluno(aluno, false);
                                 break;
                             case 4:
                                 serviceAluno.DoTest(aluno);
@@ -225,191 +226,5 @@ public class AplicativoProvas
                 }
             }
         }
-    }
-
-    public static int MenuPessoa()
-    {
-        int opcao = 0;
-        bool entradaValida = false;
-
-        while (!entradaValida)
-        {
-            Console.WriteLine("--== ESCOLHA SUA OPÇÃO ==--");
-            Console.WriteLine("1 - PROFESSOR");
-            Console.WriteLine("2 - ALUNO");
-            Console.WriteLine("0 - SAIR");
-
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 2)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
-
-        return opcao;
-    }
-
-    public static int MenuSign()
-    {
-        int opcao = 0;
-        bool entradaValida = false;
-
-        while (!entradaValida)
-        {
-            Console.WriteLine("--== ESCOLHA SUA OPÇÃO: ==--");
-            Console.WriteLine("1 - CADASTRO");
-            Console.WriteLine("2 - LOGIN");
-
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 1 && opcao <= 2)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
-
-        return opcao;
-    }
-
-    public static char MenuProfessor()
-    {
-        char opcao = '0';
-        bool entradaValida = false;
-
-        
-        Console.WriteLine("-=: Menu do professor :=-");
-            Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("+ - Adicionar materia");
-            serviceMateria.GetAll(null);
-            Console.WriteLine("0 - Logout");
-            opcao = Convert.ToChar(Console.ReadLine());
-
-            
-        return opcao;
-    }
-
-    public static int MenuAluno()
-    {
-        int opcao = 0;
-        bool entradaValida = false;
-
-        while (!entradaValida)
-        {
-            Console.WriteLine("-=: Menu aluno :=-");
-            Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("1 - Entrar em Materia");
-            Console.WriteLine("2 - Ver Materias");
-            Console.WriteLine("3 - Ver Provas");
-            Console.WriteLine("4 - Fazer Prova");
-            Console.WriteLine("0 - Logout");
-
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 4)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
-
-        return opcao;
-    }
-
-    public static char MenuMateria()
-    {
-        char opcao = '0';
-        bool entradaValida = false;
-        
-        Console.WriteLine("-=: Menu matéria :=-");
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("u - Atualizar");
-        Console.WriteLine("- - Excluir");
-        Console.WriteLine("+ - Adicionar prova");
-        serviceProva.GetAll();
-        Console.WriteLine("0 - Sair");
-        opcao = Convert.ToChar(Console.ReadLine());
-
-        return opcao;
-    }
-
-    public static char MenuProva()
-    {
-        char opcao = '0';
-        bool entradaValida = false;
-
-        Console.WriteLine("-=: Menu prova :=-");
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("u - Atualizar");
-        Console.WriteLine("- - Excluir");
-        Console.WriteLine("+ - Adicionar questao");
-        serviceQuestao.GetAll();
-        Console.WriteLine("0 - Sair");
-            
-        
-        opcao = Convert.ToChar(Console.ReadLine());
-
-        
-        return opcao;
-    }
-
-    public static char MenuQuestao()
-    {
-        char opcao = '0';
-        bool entradaValida = false;
-        
-        Console.WriteLine("-=: Menu questão :=-");
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("u - Atualizar");
-        Console.WriteLine("- - Excluir");
-        Console.WriteLine("+ - Adicionar alternativa");
-        serviceAlternativa.GetAll();
-        Console.WriteLine("0 - Sair");
-
-        opcao = Convert.ToChar(Console.ReadLine());
-        
-        return opcao;
-    }
-
-    public static char MenuAlternativa()
-    {
-        char opcao = '0';
-        bool entradaValida = false;
-        
-        Console.WriteLine("-=: Menu alternativa :=-");
-        Console.WriteLine("-=: Digite a opção desejada :=-");
-        Console.WriteLine("u - Atualizar");
-        Console.WriteLine("- - Excluir");
-        Console.WriteLine("0 - Sair");
-
-        opcao = Convert.ToChar(Console.ReadLine());
-
-        return opcao;
     }
 }

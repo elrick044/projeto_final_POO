@@ -69,7 +69,7 @@ namespace projeto_final_POO2.controllers
             if (questao != null)
             {
                 Alternativa alternativa = new Alternativa(a.Id, texto, correta, Convert.ToInt32(questao.Id));
-                _ra.Update(alternativa);
+                _ra.Update(Convert.ToInt32(alternativa.Id),alternativa);
             }
             else
             {
