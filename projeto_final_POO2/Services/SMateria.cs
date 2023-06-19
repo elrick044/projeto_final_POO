@@ -19,17 +19,8 @@ public class SMateria
         _rm.Add(materia);
     }
 
-    public void Update(Professor p)
+    public void Update(Materia m)
     {
-        Console.WriteLine("DIGITE O ID DA MATERIA A SER ALTERADA: ");
-        int id;
-        while (!int.TryParse(Console.ReadLine(), out id))
-        {
-            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
-        }
-
-        Materia m = _rm.GetById(id);
-
         Console.WriteLine("--== DIGITE OS NOVOS DADOS DO MATERIA: ==--");
         Console.WriteLine("Nome:");
         string nome = Console.ReadLine();
@@ -37,46 +28,39 @@ public class SMateria
         Console.WriteLine("Chave: ");
         string chave = Console.ReadLine();
 
-        Materia materia = new Materia(id, nome, Convert.ToInt32(p.Id), m.Alunos, chave);
+        Materia materia = new Materia(m.Id, nome, m.ProfessorId, m.AlunosMaterias, chave);
 
         _rm.Update(materia);
     }
 
-    public void Delete()
+    public void Delete(Materia materia)
     {
-        Console.WriteLine("DIGITE O ID DA MATERIA A SER DELETADA: ");
-        int id;
-        while (!int.TryParse(Console.ReadLine(), out id))
-        {
-            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
-        }
-
-        Materia materia = _rm.GetById(id);
-
         _rm.Delete(materia);
     }
 
-    public void GetByID()
+    public Materia GetByID(int id)
     {
-        Console.WriteLine("DIGITE O ID DA MATERIA A SER IMPRESSA: ");
-        int id;
-        while (!int.TryParse(Console.ReadLine(), out id))
-        {
-            Console.WriteLine("Entrada inválida. Digite um número válido para o ID da Materia: ");
-        }
-
         Materia materia = _rm.GetById(id);
 
-        Console.WriteLine(materia.ToString());
+        Console.WriteLine(materia);
+
+        return materia;
+
     }
 
-    public void GetAll()
+    public void GetAll(List<Materia>? materiasIncrito)
     {
         List<Materia> materias = _rm.GetAll();
 
+        if (materiasIncrito != null)
+        {
+            materias.RemoveAll(valor => materiasIncrito.Contains(valor));
+        }
+        
         foreach (var materia in materias)
         {
             Console.WriteLine(materia.ToString());
         }
     }
+    
 }

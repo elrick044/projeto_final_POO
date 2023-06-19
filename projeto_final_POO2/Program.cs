@@ -10,12 +10,12 @@ public class AplicativoProvas
         return JsonConvert.SerializeObject(obj);
     }
 
-    public static readonly SProfessor Sp = new SProfessor();
-    public static readonly SAluno Sa = new SAluno();
-    public static readonly SMateria Sm = new SMateria();
-    public static readonly SProva Spr = new SProva();
-    public static readonly SQuestao Sq = new SQuestao();
-    public static readonly SAlternativa Sal = new SAlternativa();
+    public static readonly SProfessor serviceProfessor = new SProfessor();
+    public static readonly SAluno serviceAluno = new SAluno();
+    public static readonly SMateria serviceMateria = new SMateria();
+    public static readonly SProva serviceProva = new SProva();
+    public static readonly SQuestao serviceQuestao = new SQuestao();
+    public static readonly SAlternativa serviceAlternativa = new SAlternativa();
 
     public static void Main(string[] args)
     {
@@ -35,12 +35,12 @@ public class AplicativoProvas
                         switch (MenuSign())
                         {
                             case 1:
-                                Sp.Add();
+                                serviceProfessor.Add();
                                 break;
                             case 2:
                                 while (professor == null)
                                 {
-                                    professor = Sp.Login();
+                                    professor = serviceProfessor.Login();
                                     Console.WriteLine(professor.Nome);
                                 }
 
@@ -56,12 +56,12 @@ public class AplicativoProvas
                         switch (MenuSign())
                         {
                             case 1:
-                                Sa.Add();
+                                serviceAluno.Add();
                                 break;
                             case 2:
                                 while (aluno == null)
                                 {
-                                    aluno = Sa.Login();
+                                    aluno = serviceAluno.Login();
                                 }
 
                                 loged = true;
@@ -79,150 +79,141 @@ public class AplicativoProvas
             else
             {
                 int fim = 0;
-                
+
                 if (professor != null)
                 {
-                    while (fim != 1)
+                    while (loged)
                     {
-                        int brk = 0;
+                        char op = MenuProfessor();
 
-                        switch (MenuProfessor())
+                        if (op == '+')
                         {
-                            case 1: //Materia
-                                while (brk != 1)
+                            serviceMateria.Add(professor);
+                        }
+                        else if ((int)Char.GetNumericValue(op) > 0)
+                        {
+                            Materia materia = serviceMateria.GetByID((int)Char.GetNumericValue(op));
+
+                            op = MenuMateria();
+
+                            if (op == '+')
+                            {
+                                serviceProva.Add(materia);
+                            }
+                            else if (op == '-')
+                            {
+                                serviceMateria.Delete(materia);
+                            }
+                            else if (op == 'u')
+                            {
+                                serviceMateria.Update(materia);
+                            }
+                            else if ((int)Char.GetNumericValue(op) > 0)
+                            {
+                                Prova prova = serviceProva.GetByID((int)Char.GetNumericValue(op));
+
+                                while (true)
                                 {
-                                    switch (MenuMateria())
+                                    op = MenuProva();
+
+                                    if (op == '+')
                                     {
-                                        case 1:
-                                            Sm.Add(professor);
-                                            break;
-                                        case 2:
-                                            Sm.Update(professor);
-                                            break;
-                                        case 3:
-                                            Sm.Delete();
-                                            break;
-                                        case 4:
-                                            Sm.GetByID();
-                                            break;
-                                        case 5:
-                                            Sm.GetAll();
-                                            break;
-                                        default:
-                                            brk = 1;
-                                            break;
+                                        serviceQuestao.Add(prova);
+                                    }
+                                    else if (op == '-')
+                                    {
+                                        serviceProva.Delete(prova);
+                                    }
+                                    else if (op == 'u')
+                                    {
+                                        serviceProva.Update(prova);
+                                    }
+                                    else if ((int)Char.GetNumericValue(op) > 0)
+                                    {
+                                        Questao questao = serviceQuestao.GetByID((int)Char.GetNumericValue(op));
+
+                                        while (true)
+                                        {
+                                            op = MenuQuestao();
+
+                                            if (op == '+')
+                                            {
+                                                serviceAlternativa.Add(questao);
+                                            }
+                                            else if (op == '-')
+                                            {
+                                                serviceQuestao.Delete(questao);
+                                            }
+                                            else if (op == 'u')
+                                            {
+                                                serviceQuestao.Update(questao, prova);
+                                            }
+                                            else if ((int)Char.GetNumericValue(op) > 0)
+                                            {
+                                                Alternativa alternativa = serviceAlternativa.GetByID((int)Char.GetNumericValue(op));
+
+                                                while (true)
+                                                {
+                                                    op = MenuAlternativa();
+
+                                                    if (op == '-')
+                                                    {
+                                                        serviceAlternativa.Delete(alternativa);
+                                                    }
+                                                    else if (op == 'u')
+                                                    {
+                                                        serviceAlternativa.Update(alternativa, questao);
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        break;
                                     }
                                 }
-
+                            }else
+                            {
                                 break;
-                            case 2: //Prova
-                                while (brk != 1)
-                                {
-                                    switch (MenuProva())
-                                    {
-                                        case 1:
-                                            Spr.Add();
-                                            break;
-                                        case 2:
-                                            Spr.Update();
-                                            break;
-                                        case 3:
-                                            Spr.Delete();
-                                            break;
-                                        case 4:
-                                            Spr.GetByID();
-                                            break;
-                                        case 5:
-                                            Spr.GetAll();
-                                            break;
-                                        default:
-                                            brk = 1;
-                                            break;
-                                    }
-                                }
-
-                                break;
-                            case 3: //Questao
-                                while (brk != 1)
-                                {
-                                    switch (MenuQuestao())
-                                    {
-                                        case 1:
-                                            Sq.Add();
-                                            break;
-                                        case 2:
-                                            Sq.Update();
-                                            break;
-                                        case 3:
-                                            Sq.Delete();
-                                            break;
-                                        case 4:
-                                            Sq.GetByID();
-                                            break;
-                                        case 5:
-                                            Sq.GetAll();
-                                            break;
-                                        default:
-                                            brk = 1;
-                                            break;
-                                    }
-                                }
-
-                                break;
-                            case 4: //Alternativa
-                                while (brk != 1)
-                                {
-                                    switch (MenuAlternativa())
-                                    {
-                                        case 1:
-                                            Sal.Add();
-                                            break;
-                                        case 2:
-                                            Sal.Update();
-                                            break;
-                                        case 3:
-                                            Sal.Delete();
-                                            break;
-                                        case 4:
-                                            Sal.GetByID();
-                                            break;
-                                        case 5:
-                                            Sal.GetAll();
-                                            break;
-                                        default:
-                                            brk = 1;
-                                            break;
-                                    }
-                                }
-
-                                break;
-                            default:
-                                loged = false;
-                                professor = null;
-                                fim = 1;
-                                break;
+                            }
+                        }
+                        else
+                        {
+                            loged = false;
+                            professor = null;
+                            break;
                         }
                     }
                 }
+
                 else if (aluno != null)
                 {
-                     while (fim != 1)
+                    while (fim != 1)
                     {
                         int brk = 0;
 
                         switch (MenuAluno())
                         {
                             case 1:
-                                Sa.Register(aluno);
+                                serviceAluno.Register(aluno);
                                 break;
                             case 2:
-                                Sa.GetMateriasAluno(aluno);
+                                serviceAluno.imprimirMaterias(aluno);
                                 break;
                             case 3:
-                                Sa.GetProvasAluno(aluno);
+                                serviceAluno.GetProvasAluno(aluno);
                                 break;
-                            case 4: 
-                                Sa.DoTest(aluno);
+                            case 4:
+                                serviceAluno.DoTest(aluno);
                                 break;
                             default:
                                 sair = 1;
@@ -299,40 +290,23 @@ public class AplicativoProvas
         return opcao;
     }
 
-    public static int MenuProfessor()
+    public static char MenuProfessor()
     {
-        int opcao = 0;
+        char opcao = '0';
         bool entradaValida = false;
 
-        while (!entradaValida)
-        {
+        
+        Console.WriteLine("-=: Menu do professor :=-");
             Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("1 - Materia");
-            Console.WriteLine("2 - Prova");
-            Console.WriteLine("3 - Questao");
-            Console.WriteLine("4 - Alternativas");
+            Console.WriteLine("+ - Adicionar materia");
+            serviceMateria.GetAll(null);
             Console.WriteLine("0 - Logout");
+            opcao = Convert.ToChar(Console.ReadLine());
 
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 4)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
-
+            
         return opcao;
     }
-    
+
     public static int MenuAluno()
     {
         int opcao = 0;
@@ -340,6 +314,7 @@ public class AplicativoProvas
 
         while (!entradaValida)
         {
+            Console.WriteLine("-=: Menu aluno :=-");
             Console.WriteLine("-=: Digite a opção desejada :=-");
             Console.WriteLine("1 - Entrar em Materia");
             Console.WriteLine("2 - Ver Materias");
@@ -367,142 +342,73 @@ public class AplicativoProvas
         return opcao;
     }
 
-    public static int MenuMateria()
+    public static char MenuMateria()
     {
-        int opcao = 0;
+        char opcao = '0';
         bool entradaValida = false;
-
-        while (!entradaValida)
-        {
-            Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("1 - Adicionar");
-            Console.WriteLine("2 - Atualizar");
-            Console.WriteLine("3 - Excluir");
-            Console.WriteLine("4 - Obter Por ID");
-            Console.WriteLine("5 - Obter Todos");
-            Console.WriteLine("0 - Sair");
-
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 5)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
-
-        return opcao;
-    }
-    
-    public static int MenuProva()
-    {
-        int opcao = 0;
-        bool entradaValida = false;
-
-        while (!entradaValida)
-        {
-            Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("1 - Adicionar");
-            Console.WriteLine("2 - Atualizar");
-            Console.WriteLine("3 - Excluir");
-            Console.WriteLine("4 - Obter Por ID");
-            Console.WriteLine("5 - Obter Todos");
-            Console.WriteLine("0 - Sair");
-
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 5)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
+        
+        Console.WriteLine("-=: Menu matéria :=-");
+        Console.WriteLine("-=: Digite a opção desejada :=-");
+        Console.WriteLine("u - Atualizar");
+        Console.WriteLine("- - Excluir");
+        Console.WriteLine("+ - Adicionar prova");
+        serviceProva.GetAll();
+        Console.WriteLine("0 - Sair");
+        opcao = Convert.ToChar(Console.ReadLine());
 
         return opcao;
     }
 
-    public static int MenuQuestao()
+    public static char MenuProva()
     {
-        int opcao = 0;
+        char opcao = '0';
         bool entradaValida = false;
 
-        while (!entradaValida)
-        {
-            Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("1 - Adicionar");
-            Console.WriteLine("2 - Atualizar");
-            Console.WriteLine("3 - Excluir");
-            Console.WriteLine("4 - Obter Por ID");
-            Console.WriteLine("5 - Obter Todos");
-            Console.WriteLine("0 - Sair");
+        Console.WriteLine("-=: Menu prova :=-");
+        Console.WriteLine("-=: Digite a opção desejada :=-");
+        Console.WriteLine("u - Atualizar");
+        Console.WriteLine("- - Excluir");
+        Console.WriteLine("+ - Adicionar questao");
+        serviceQuestao.GetAll();
+        Console.WriteLine("0 - Sair");
+            
+        
+        opcao = Convert.ToChar(Console.ReadLine());
 
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 5)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
-
+        
         return opcao;
     }
 
-    public static int MenuAlternativa()
+    public static char MenuQuestao()
     {
-        int opcao = 0;
+        char opcao = '0';
         bool entradaValida = false;
+        
+        Console.WriteLine("-=: Menu questão :=-");
+        Console.WriteLine("-=: Digite a opção desejada :=-");
+        Console.WriteLine("u - Atualizar");
+        Console.WriteLine("- - Excluir");
+        Console.WriteLine("+ - Adicionar alternativa");
+        serviceAlternativa.GetAll();
+        Console.WriteLine("0 - Sair");
 
-        while (!entradaValida)
-        {
-            Console.WriteLine("-=: Digite a opção desejada :=-");
-            Console.WriteLine("1 - Adicionar");
-            Console.WriteLine("2 - Atualizar");
-            Console.WriteLine("3 - Excluir");
-            Console.WriteLine("4 - Obter Por ID");
-            Console.WriteLine("5 - Obter Todos");
-            Console.WriteLine("0 - Sair");
+        opcao = Convert.ToChar(Console.ReadLine());
+        
+        return opcao;
+    }
 
-            if (int.TryParse(Console.ReadLine(), out opcao))
-            {
-                if (opcao >= 0 && opcao <= 5)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida! Digite um número válido.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida! Digite um número válido.");
-            }
-        }
+    public static char MenuAlternativa()
+    {
+        char opcao = '0';
+        bool entradaValida = false;
+        
+        Console.WriteLine("-=: Menu alternativa :=-");
+        Console.WriteLine("-=: Digite a opção desejada :=-");
+        Console.WriteLine("u - Atualizar");
+        Console.WriteLine("- - Excluir");
+        Console.WriteLine("0 - Sair");
+
+        opcao = Convert.ToChar(Console.ReadLine());
 
         return opcao;
     }

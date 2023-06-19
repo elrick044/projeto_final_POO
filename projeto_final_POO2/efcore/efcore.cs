@@ -20,12 +20,13 @@ public class Professor
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
+
     public string Nome { get; set; }
     public string Login { get; set; }
     public string Senha { get; set; }
-    
+
     public List<Materia> Materias { get; set; }
-    
+
     public override string ToString()
     {
         return $"Professor: Id={Id}, Nome={Nome}, Login={Login}, Senha={Senha}";
@@ -38,29 +39,52 @@ public class Aluno
     {
     }
 
-    public Aluno(int? id, string nome, string login, string senha, List<Materia>? materias)
+    public Aluno(int? id, string nome, string login, string senha, IEnumerable<AlunoMateria> alunosMaterias)
     {
         Id = id;
         Nome = nome;
         Login = login;
         Senha = senha;
-        //Materias = materias;
-        
-        Materias = new List<Materia>();
-        }
+        AlunosMaterias = alunosMaterias;
+    }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
+
     public string Nome { get; set; }
     public string Login { get; set; }
     public string Senha { get; set; }
-    
-    public List<Materia>? Materias { get; set; }
-    
+
+    public IEnumerable<AlunoMateria>? AlunosMaterias { get; set; }
+
     public override string ToString()
     {
         return $"Aluno: Id={Id}, Nome={Nome}, Login={Login}, Senha={Senha}";
     }
+}
+
+public class AlunoMateria
+{
+    public AlunoMateria()
+    {
+    }
+    
+    public AlunoMateria(int idAluno, int idMateria, double nota)
+    {
+        IdAluno = idAluno;
+        IdMateria = idMateria;
+        Nota = nota;
+    }
+
+    public int IdAluno { get; set; }
+    [ForeignKey("IdAluno")]
+    public Aluno Aluno { get; set; }
+    
+    public int IdMateria { get; set; }
+    [ForeignKey("IdMateria")]
+    public Materia Materia { get; set; }
+    
+    public double Nota { get; set; }
 }
 
 public class Materia
@@ -69,36 +93,31 @@ public class Materia
     {
     }
 
-    public Materia(int? id, string nome, int professorId, List<Aluno>? alunos, string chave)
+    public Materia(int? id, string nome, int professorId, IEnumerable<AlunoMateria> alunosMaterias, string chave)
     {
         Id = id;
         Nome = nome;
         ProfessorId = professorId;
-        Alunos = alunos;
+        AlunosMaterias = alunosMaterias;
         Chave = chave;
-
-        if (alunos == null)
-        {
-            Alunos = new List<Aluno>();    
-        }
-        
     }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
+
     public string Nome { get; set; }
-    public List<Aluno> Alunos { get; set; }
+    public IEnumerable<AlunoMateria>? AlunosMaterias { get; set; }
     public string Chave { get; set; }
-    
+
     public int ProfessorId { get; set; }
-    [ForeignKey("ProfessorId")]
-    public Professor Professor { get; set; }
-    
+    [ForeignKey("ProfessorId")] public Professor Professor { get; set; }
+
     public List<Prova> Provas { get; set; }
-    
+
     public override string ToString()
     {
-        return $"Materia: Id={Id}, Nome={Nome}, ProfessorId={ProfessorId}, Chave={Chave}";
+        base.ToString();
+        return $"{Id}, Nome= {Nome}, ProfessorId= {ProfessorId}";
     }
 }
 
@@ -119,16 +138,16 @@ public class Prova
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
+
     public DateTime Prazo { get; set; }
     public float Peso { get; set; }
     public string NomeProva { get; set; }
 
-    private int MateriaId { get; set; }
-    [ForeignKey("MateriaId")]
-    public Materia Materia { get; set; }
-    
+    public int MateriaId { get; set; }
+    [ForeignKey("MateriaId")] public Materia Materia { get; set; }
+
     public List<Questao> Questoes { get; set; }
-    
+
     public override string ToString()
     {
         return $"Prova: Id={Id}, Prazo={Prazo}, Peso={Peso}, NomeProva={NomeProva}, MateriaId={MateriaId}";
@@ -150,13 +169,13 @@ public class Questao
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
+
     public string Titulo { get; set; }
-    private int ProvaId { get; set; }
-    [ForeignKey("ProvaId")]
-    public Prova Prova { get; set; }
-    
+    public int ProvaId { get; set; }
+    [ForeignKey("ProvaId")] public Prova Prova { get; set; }
+
     public List<Alternativa> Alternativas { get; set; }
-    
+
     public override string ToString()
     {
         return $"Questao: Id={Id}, Titulo={Titulo}, ProvaId={ProvaId}";
@@ -179,14 +198,13 @@ public class Alternativa
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
+
     public string Texto { get; set; }
     public bool Correta { get; set; }
-    
+
     public int QuestaoId { get; set; }
-    [ForeignKey("QuestaoId")]
-    
-    public Questao Questao { get; set; }
-    
+    [ForeignKey("QuestaoId")] public Questao Questao { get; set; }
+
     public override string ToString()
     {
         return $"Alternativa: Id={Id}, Texto={Texto}, Correta={Correta}, QuestaoId={QuestaoId}";
@@ -195,15 +213,33 @@ public class Alternativa
 
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<Professor> Professor { get; set; } 
+    public DbSet<Professor> Professor { get; set; }
     public DbSet<Aluno> Aluno { get; set; }
     public DbSet<Materia> Materias { get; set; }
     public DbSet<Prova> Provas { get; set; }
     public DbSet<Questao> Questoes { get; set; }
     public DbSet<Alternativa> Alternativas { get; set; }
+    public DbSet<AlunoMateria> AlunosMaterias { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseMySQL("Server=localhost;Port=3306;Database=projeto_final_POO;Uid=root;Pwd=260405;"); 
+        optionsBuilder.UseMySQL("Server=localhost;Port=3306;Database=projeto_final_POO;Uid=root;Pwd=260405;");
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<AlunoMateria>()
+            .HasKey(m => new { m.IdAluno, m.IdMateria });
+        
+        modelBuilder.Entity<AlunoMateria>()
+            .HasOne(m => m.Aluno)
+            .WithMany(a => a.AlunosMaterias)
+            .HasForeignKey(m => m.IdAluno);
+
+        modelBuilder.Entity<AlunoMateria>()
+            .HasOne(m => m.Materia)
+            .WithMany(d => d.AlunosMaterias)
+            .HasForeignKey(m => m.IdMateria);
     }
 }

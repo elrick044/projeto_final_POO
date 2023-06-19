@@ -47,28 +47,6 @@ public interface IProfessorRepository
     
 }
 
-public class ProfessorRepository : Repository<Professor>, IProfessorRepository
-{
-    
-    public Professor login(string login, string pass)
-    {
-        Professor professor = new Professor(); 
-        professor = Context.Professor.First(u => u.Login == login);//testar o que acontece quando não existe o nome  
-        
-        
-        if (professor.Id != null)
-        {
-            if (professor.Senha != pass)
-            {
-                return null;
-            }
-            return professor;
-        }
-
-        return null;
-    }
-}
-
 public interface IAlunoRepository : IRepository<Aluno>
 {
     // Métodos específicos para o Aluno, se necessário
@@ -94,17 +72,61 @@ public interface IAlternativaRepository : IRepository<Alternativa>
     // Métodos específicos para a Alternativa, se necessário
 }
 
+public interface IAlunoMateriaRepository : IRepository<AlunoMateria>
+{
+    //implementar cabeçalhos
+}
+
+public class ProfessorRepository : Repository<Professor>, IProfessorRepository
+{
+    public Professor login(string login, string pass)
+    {
+        Professor professor = new Professor();
+
+        try
+        {
+            professor = Context.Professor.First(u => u.Login == login);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Nome inválido");
+            throw;
+        }
+        
+        if (professor.Id != null)
+        {
+            if (professor.Senha != pass)
+            {
+                Console.WriteLine("Senha inválida");
+                return null;
+            }
+            return professor;
+        }
+
+        return null;
+    }
+}
+
 public class AlunoRepository : Repository<Aluno>, IAlunoRepository
 {
     public ApplicationDbContext Context = new ApplicationDbContext();
     
     public Aluno login(string login, string pass)
     {
-        var aluno = Context.Aluno.First(u => u.Login == login);//testar o que acontece quando não existe o nome  
+        Aluno aluno = null;
+        try
+        {
+            aluno = Context.Aluno.First(u => u.Login == login);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Nome de usuario incorreto");
+        }
         if (aluno != null)
         {
             if (aluno.Senha != pass)
             {
+                Console.WriteLine("Senha incorreta");
                 return null;
             }
 
@@ -112,19 +134,7 @@ public class AlunoRepository : Repository<Aluno>, IAlunoRepository
         }
         return null;
     }
-
-    public void subscribeClass(Materia materia, Aluno aluno)
-    {
-        if (GetById(Convert.ToInt32(aluno.Id)).Materias == null)
-        {
-            GetById(Convert.ToInt32(aluno.Id)).Materias = new List<Materia> { materia };
-        }
-        else
-        {
-            GetById(Convert.ToInt32(aluno.Id)).Materias.Add(materia);
-        }
-        Context.SaveChanges();
-    }
+    
 }
 
 public class MateriaRepository : Repository<Materia>, IMateriaRepository
@@ -138,7 +148,7 @@ public class ProvaRepository : Repository<Prova>, IProvaRepository
 
     public List<Prova> GetByMateria(Materia materia)
     {
-        return new List<Prova> { Context.Set<Prova>().Find(materia) };
+        return Context.Set<Prova>().Where(u => u.MateriaId == materia.Id).ToList();
     }
 }
 
@@ -149,7 +159,7 @@ public class QuestaoRepository : Repository<Questao>, IQuestaoRepository
 
     public List<Questao> GetByProva(Prova prova)
     {
-        return new List<Questao> { Context.Set<Questao>().Find(prova) };
+        return Context.Set<Questao>().Where(u => u.ProvaId == prova.Id).ToList();
     }
 }
 
@@ -159,6 +169,17 @@ public class AlternativaRepository : Repository<Alternativa>, IAlternativaReposi
 
     public List<Alternativa> GetByQuestao(Questao questao)
     {
-        return new List<Alternativa> { Context.Set<Alternativa>().Find(questao) };
+        return Context.Set<Alternativa>().Where(u => u.QuestaoId == questao.Id).ToList();
     }
 }
+
+public class AlunoMateriaRepository : Repository<AlunoMateria>, IAlunoMateriaRepository
+{
+    public ApplicationDbContext Context = new ApplicationDbContext();
+    public List<AlunoMateria>getAllByIdAluno(int id)
+    {
+        return  Context.Set<AlunoMateria>().Where(u => u.IdAluno == id).ToList();
+    }
+}
+
+//            professor = Context.Professor.First(u => u.Login == login);

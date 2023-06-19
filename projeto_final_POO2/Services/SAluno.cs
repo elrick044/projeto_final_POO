@@ -5,13 +5,15 @@ namespace projeto_final_POO2.controllers;
 public class SAluno
 {
 
-    private readonly AlunoRepository _ra = new AlunoRepository();
-    private static readonly ProvaRepository Rp = new ProvaRepository();
-    private static readonly MateriaRepository Rm = new MateriaRepository();
-    private static readonly QuestaoRepository Rq = new QuestaoRepository();
-    private static readonly AlternativaRepository Ra = new AlternativaRepository();
-    private static readonly SMateria Sm = new SMateria();
-    private static readonly SProva Sp = new SProva();
+    private readonly AlunoRepository _alunoRepository = new AlunoRepository();
+    private readonly AlunoMateriaRepository _alunoMateriaRepository = new AlunoMateriaRepository();
+    private readonly MateriaRepository _materiaRepository = new MateriaRepository();
+    private static readonly ProvaRepository ProvaRepository = new ProvaRepository();
+    private static readonly MateriaRepository MateriaRepository = new MateriaRepository();
+    private static readonly QuestaoRepository QuestaoRepository = new QuestaoRepository();
+    private static readonly AlternativaRepository AlternativaRepository = new AlternativaRepository();
+    private static readonly SMateria ServiceSMateria = new SMateria();
+    private static readonly SProva ServiceSProva = new SProva();
 
     public void Add()
     {
@@ -25,9 +27,9 @@ public class SAluno
         Console.WriteLine("Senha: ");
         string senha = Console.ReadLine();
 
-        Aluno aluno = new Aluno(null, nome, login, senha, null);
+        Aluno aluno = new Aluno(null, nome, login, senha, new List<AlunoMateria>());
 
-        _ra.Add(aluno);
+        _alunoRepository.Add(aluno);
     }
 
     public Aluno Login()
@@ -39,15 +41,16 @@ public class SAluno
         Console.WriteLine("Senha: ");
         string senha = Console.ReadLine();
 
-        Aluno aluno = _ra.login(login, senha);
+        Aluno aluno = _alunoRepository.login(login, senha);
 
         return aluno;
     }
 
-    public void Register(Aluno aluno)
+    public void  Register(Aluno aluno)
     {
         Console.WriteLine("--== MATERIAS ==--");
-        Sm.GetAll();
+        
+        ServiceSMateria.GetAll(null);
 
         Console.WriteLine("Id da Materia: ");
         int id;
@@ -56,7 +59,7 @@ public class SAluno
             Console.WriteLine("Entrada inválida. Digite um número válido para o Id da Materia: ");
         }
 
-        Materia materia = Rm.GetById(id);
+        Materia materia = MateriaRepository.GetById(id);
 
         string chave = null;
 
@@ -72,11 +75,8 @@ public class SAluno
 
             if (chave == materia.Chave)
             {
-                aluno.Materias = new List<Materia> { materia };
-
-                _ra.subscribeClass(materia, aluno);
-                //materia.Alunos.Add(aluno);
-                //aluno.Materias.Add(materia);
+                AlunoMateria alunoMateria = new AlunoMateria(Convert.ToInt32(aluno.Id), Convert.ToInt32(materia.Id), 0);
+                _alunoMateriaRepository.Add(alunoMateria);
             }
             else
             {
@@ -85,28 +85,28 @@ public class SAluno
         }
     }
 
-    public void GetMateriasAluno(Aluno aluno)
+    public List<Materia> GetMateriasAluno(Aluno aluno)
     {
         Console.WriteLine("--== MATERIAS ==--");
 
-        if (aluno.Materias == null)
+        List<AlunoMateria> alunosMaterias = _alunoMateriaRepository.getAllByIdAluno(Convert.ToInt32(aluno.Id));
+        List<Materia> materias = new List<Materia>();
+
+        foreach (var  alunoMateria in alunosMaterias)
         {
-            Console.WriteLine("Você ainda não está em nenhuma matéria");
+            materias.Add(_materiaRepository.GetById(alunoMateria.IdMateria));
         }
-        else
-        {
-            foreach (var materia in aluno.Materias)
-            {
-                Console.WriteLine(materia.ToString());
-            }
-        }
+
+        return materias;
     }
 
     public void GetProvasAluno(Aluno aluno)
     {
-        foreach (var materia in aluno.Materias)
+        List < Materia > materias = GetMateriasAluno(aluno);
+        
+        foreach (var materia in materias)
         {
-            Sp.GetByMaterias(materia);
+            ServiceSProva.GetByMaterias(materia);
         }
     }
 
@@ -124,13 +124,13 @@ public class SAluno
             Console.WriteLine("Entrada inválida. Digite um número válido para o Id da Prova: ");
         }
 
-        Prova prova = Rp.GetById(id);
+        Prova prova = ProvaRepository.GetById(id);
 
-        List<Questao> questoes = Rq.GetByProva(prova);
+        List<Questao> questoes = QuestaoRepository.GetByProva(prova);
 
         foreach (var questao in questoes)
         {
-            List<Alternativa> alternativas = Ra.GetByQuestao(questao);
+            List<Alternativa> alternativas = AlternativaRepository.GetByQuestao(questao);
             Console.WriteLine(questao.Titulo);
 
             Alternativa correta = null;
@@ -159,5 +159,15 @@ public class SAluno
 
         Console.WriteLine(acertos + " / " + questoes.Count);
         Console.WriteLine("Nota: " + Convert.ToDouble(acertos) * 100 / questoes.Count);
+    }
+
+    public void imprimirMaterias(Aluno aluno)
+    {
+        List<Materia> materias = GetMateriasAluno(aluno);
+        
+        foreach (var materia in materias)
+        {
+            Console.WriteLine(materia);   
+        }
     }
 }
